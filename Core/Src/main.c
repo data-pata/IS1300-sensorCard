@@ -23,9 +23,9 @@
 #include "adc.h"
 #include "i2c.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "test.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -34,7 +34,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define RUN_TEST_PROGRAM
+//#define RUN_TEST_PROGRAM
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -97,12 +97,17 @@ int main(void)
   MX_UART5_Init();
   MX_USART2_UART_Init();
   MX_ADC1_Init();
+  MX_TIM2_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 #ifdef RUN_TEST_PROGRAM
   test();
 #else
 //  Program();
 #endif
+
+pwmBackLight();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,6 +117,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
   }
   /* USER CODE END 3 */
 }
@@ -183,6 +189,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
 
 /* USER CODE END 4 */
 

@@ -23,5 +23,6 @@ void testBacklight(uint8_t color[]) {
 }
 
 void testPot(){
-  potPollTest();
+  potItTest();
+  //potPollTest();
 }
