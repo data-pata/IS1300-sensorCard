@@ -4,7 +4,9 @@
  *  Created on: Nov 25, 2019
  *      Author: samfl
  */
-#include <test.h>
+#include "test.h"
+#include "display.h"
+#include "pot.h"
 
 void test(void) {
 	//Test_display_background("red");

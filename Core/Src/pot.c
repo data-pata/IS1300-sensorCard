@@ -78,7 +78,7 @@ void potPollTest(void) {
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
   if(hadc->Instance == ADC1){
-    changeLight(HAL_ADC_GetValue(&hadc1));
+    dimBackLight(HAL_ADC_GetValue(&hadc1));
   }
 }
 
