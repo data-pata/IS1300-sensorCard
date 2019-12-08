@@ -26,9 +26,9 @@ void potItTest(void) {
 
   HAL_ADC_Start_IT(&hadc1);
 
-  while(1) {
-    asm("NOP");
-  }
+//  while(1) {
+//    asm("NOP");
+//  }
 }
 
 void changeLight(uint32_t adcResult) {

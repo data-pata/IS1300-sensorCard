@@ -15,8 +15,6 @@ void displayInit(void){
   displayReset(); // kolla gpio-pin inst!
   HAL_Delay(10);
 
-  HAL_GPIO_WritePin(Display_green_GPIO_Port, Display_green_Pin, 1);
-
   writeIns(0x3A); //8-Bit data length extension Bit RE=1; REV=0
   writeIns(0x09); //4 line display
   writeIns(0x06); //Bottom view
