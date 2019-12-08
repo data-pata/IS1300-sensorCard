@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 
-
+void rtcTest(void);
 void test(void);
 void testDisplay(void);
 void testBacklight(uint8_t[]);
