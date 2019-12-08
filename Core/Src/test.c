@@ -14,7 +14,7 @@
 
 void test(void) {
 //  Test_display_background("red");
-//  testDisplay();
+  testDisplay();
 //  testPot();
   rtcTest();
 }
@@ -34,14 +34,30 @@ void testPot(){
 }
 
 void rtcTest() {
+//  char err[] = "rtc error";
   char str[10];
-  RTC_TimeTypeDef Time = {0};
+  RTC_TimeTypeDef time = {0};
+  RTC_DateTypeDef date = {0};
+//  sTime.Hours = 0x23;
+//  sTime.Minutes = 0x59;
+//  sTime.Seconds = 0x55;
+//  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+//  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+//  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+//  {
+//    HAL_UART_Transmit(&huart5, (uint8_t *) err, strlen(err), 100);
+//  }
 
   while(1) {
     HAL_Delay(1000);
-    HAL_RTC_GetTime(&hrtc,&Time,RTC_FORMAT_BCD);
-    sprintf(str,"%x:%x:%x/r/n",Time.Hours,Time.Minutes,Time.Seconds);
+    writeIns(0x01); //clr dspl
+
+    HAL_RTC_GetTime(&hrtc,&time,RTC_FORMAT_BCD);
+    HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BCD); //SUPERWEIRD
+    sprintf(str,"%x:%x:%x",time.Hours,time.Minutes,time.Seconds);
+    writeString(str);
+
     HAL_UART_Transmit(&huart5, (uint8_t *) str, strlen(str), 100);
-    memset(str,0,sizeof(str));
+
   }
 }

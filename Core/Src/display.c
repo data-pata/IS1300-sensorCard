@@ -27,23 +27,19 @@ void displayInit(void){
   writeIns(0x56); //Booster on and set contrast (BB1=C5, DB0=C4)
   writeIns(0x7A); //Set contrast (DB3-DB0=C3-C0)
   writeIns(0x38); //8-Bit data length extension Bit RE=0; IS=0
-  writeIns(0x3a); //adress
-  writeIns(0x72); //adress
-  writeD(0x00);
-  writeIns(0x38); //adress
-  writeIns(0x0f); //display on
-  writeIns(0x01); //adress
+  writeIns(0x3a); // set RE, reset IS
 
-  HAL_GPIO_WritePin(Display_green_GPIO_Port, Display_green_Pin, 0);
-  HAL_GPIO_WritePin(Display_white_GPIO_Port, Display_white_Pin, 1);
-  HAL_GPIO_WritePin(Display_white_GPIO_Port, Display_white_Pin, 0);
+  //writeIns(0x72); //adress
 
-  writeString("Hallo Bengan!");
+  writeIns(0x06);
+  writeIns(0x38); // reset RE, reset IS
+  writeIns(0x0f); //display, cursor, blink on
+  writeIns(0x01); //clearDisplay
+
   SET_CS;
-  writeD(0xff); //ascii
-  HAL_Delay(10);
+  //writeD(0xff); //ascii
+  //HAL_Delay(10);
 
-  //DisplayOnOff(DISPLAY_ON | CURSOR_ON | BLINK_ON);'
 }
 
 void writeString(uint8_t * string) {
@@ -74,7 +70,7 @@ void writeIns(uint8_t ins) {
   RESET_CS;
 
   uint8_t outputBuffer[3];
-  outputBuffer[1] = 0x1F;
+  outputBuffer[0] = 0x1F;
   outputBuffer[1] = ins & 0x0F;                 // mask 4 lsb:s
   outputBuffer[2] = (ins>>4) & 0x0F;            // mask 4 msb:s
 

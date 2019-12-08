@@ -110,25 +110,13 @@ int main(void)
 //  Program();
 #endif
 
-//  char str[100];
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-
-//    HAL_Delay(1000);
-//    HAL_RTC_GetTime(&hrtc,&Time,RTC_FORMAT_BCD);
-//    sprintf(str,"%x:%x:%x",Time.Hours,Time.Minutes,Time.Seconds);
-//    HAL_UART_Transmit(&huart2,str,strlen(str),1000);
-//
-//    //HAL_RTC_GetDate(&hrtc,&Date,RTC_FORMAT_BCD);
-//    memset(str,0,sizeof(str));
-//    //sprintf(str,"\r\nyear = %d , month = %d , date = %d\r",Date.Year,Date.Month,Date.Date);
-//    //HAL_UART_Transmit(&huart2,str,strlen(str),1000);
-//    //printf("*************************************************");
 
     /* USER CODE END WHILE */
 
