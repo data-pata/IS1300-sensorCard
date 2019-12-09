@@ -111,8 +111,8 @@ void setTime(void){
   HAL_UART_Receive(&huart5, (uint8_t *) &tt, 2, 0xffff);
   Time.Seconds = parseChars(tt);
 
-  Time.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-  Time.StoreOperation = RTC_STOREOPERATION_RESET;
+//  Time.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+//  Time.StoreOperation = RTC_STOREOPERATION_RESET;
   HAL_RTC_SetTime(&hrtc, &Time, RTC_FORMAT_BIN);
 
 //  int j = (i[0] - '0')*10;
