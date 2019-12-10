@@ -8,6 +8,8 @@
 #ifndef INC_TEST_H_
 #include <stdint.h>
 
+void getHumidity(void);
+
 void rtcTest(void);
 void test(void);
 void testDisplay(void);
@@ -16,6 +18,8 @@ void testPot(void);
 void testIO(void);
 void setTime(void);
 int parseChars(uint8_t *tt);
+
+
 #define INC_TEST_H_
 #endif /* INC_TEST_H_ */
 

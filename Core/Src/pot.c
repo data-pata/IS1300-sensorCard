@@ -25,7 +25,7 @@ uint32_t adcResult = 0;
 void potItTest(void) {
 
   HAL_ADC_Start_IT(&hadc1);
-
+  HAL_ADC_Start()
 //  while(1) {
 //    asm("NOP");
 //  }
@@ -78,6 +78,7 @@ void potPollTest(void) {
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
   if(hadc->Instance == ADC1){
+    //HAL_Delay(1);
     dimBackLight(HAL_ADC_GetValue(&hadc1));
   }
 }
