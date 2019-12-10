@@ -7,17 +7,18 @@
 
 #ifndef INC_TEST_H_
 #include <stdint.h>
+#include <stdio.h>
+
+int fputc(int ch, FILE *f);
 
 void getHumidity(void);
 
-void rtcTest(void);
 void test(void);
 void testDisplay(void);
 void testBacklight(uint8_t[]);
 void testPot(void);
 void testIO(void);
-void setTime(void);
-int parseChars(uint8_t *tt);
+
 
 
 #define INC_TEST_H_

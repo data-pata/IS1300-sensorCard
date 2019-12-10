@@ -9,7 +9,7 @@
 
 void displayInit(void){
   SET_CS;
-  HAL_Delay(10);
+  HAL_Delay(1);
   RESET_CS;
 
   displayReset(); // kolla gpio-pin inst!
@@ -25,7 +25,7 @@ void displayInit(void){
   writeIns(0x56); //Booster on and set contrast (BB1=C5, DB0=C4)
   writeIns(0x7A); //Set contrast (DB3-DB0=C3-C0)
   writeIns(0x38); //8-Bit data length extension Bit RE=0; IS=0
-  writeIns(0x3a); // set RE, reset IS
+  writeIns(0x3a); //set RE, reset IS
 
   //writeIns(0x72); //adress
 
@@ -35,6 +35,7 @@ void displayInit(void){
   writeIns(0x01); //clearDisplay
 
   SET_CS;
+
   //writeD(0xff); //ascii
   //HAL_Delay(10);
 
@@ -47,14 +48,15 @@ void writeString(uint8_t * string) {
 }
 
 void writeD(uint8_t byte) {
-  SET_CS;
-  HAL_Delay(10);
   RESET_CS;
+
   uint8_t data[3];
   data[0] = 0x5f;
   data[1] = byte & 0x0f;
   data[2] = (byte >> 4) & 0x0f;
   HAL_SPI_Transmit(&hspi2, data, 3, 10);
+
+  SET_CS;
 }
 
 void DisplayOnOff(uint8_t data) {
@@ -63,8 +65,6 @@ void DisplayOnOff(uint8_t data) {
 
 void writeIns(uint8_t ins) {
 
-  SET_CS;
-  HAL_Delay(10);
   RESET_CS;
 
   uint8_t outputBuffer[3];
@@ -73,8 +73,12 @@ void writeIns(uint8_t ins) {
   outputBuffer[2] = (ins>>4) & 0x0F;            // mask 4 msb:s
 
   HAL_SPI_Transmit(&hspi2, outputBuffer, 3, 10);
-  //HAL_Delay(10);
 
+  SET_CS;
+}
+
+void clearDisplay(){
+  writeIns(0x01);
 }
 
 void setCS(uint8_t set){

@@ -25,8 +25,8 @@ void writeString(uint8_t * string);
 void setCS(uint8_t setOrReset);
 void writeIns(uint8_t inst);
 void writeD(uint8_t d);
-void writeIns(uint8_t ins);
-void clrDisp(void); //writes instr 0x01
+
+void clearDisplay(void); //writes instr 0x01
 
 
 #define DISPLAY_ON  0x04
