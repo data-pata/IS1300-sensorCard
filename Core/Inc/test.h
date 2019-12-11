@@ -13,7 +13,7 @@ int fputc(int ch, FILE *f);
 
 void getHumidity(void);
 
-void test(void);
+void runTests(void);
 void testDisplay(void);
 void testBacklight(uint8_t[]);
 void testPot(void);
