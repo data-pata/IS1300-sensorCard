@@ -68,10 +68,16 @@ void Error_Handler(void);
 #define ADC_Pot_GPIO_Port GPIOB
 #define Rtc_out_cal_Pin GPIO_PIN_2
 #define Rtc_out_cal_GPIO_Port GPIOB
+#define Acc_Sel_Pin GPIO_PIN_11
+#define Acc_Sel_GPIO_Port GPIOB
 #define CS_SPI2_Pin GPIO_PIN_12
 #define CS_SPI2_GPIO_Port GPIOB
 #define Display_Red_Pin GPIO_PIN_7
 #define Display_Red_GPIO_Port GPIOC
+#define Acc_Int1_Pin GPIO_PIN_8
+#define Acc_Int1_GPIO_Port GPIOA
+#define Acc_Int2_Pin GPIO_PIN_9
+#define Acc_Int2_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14

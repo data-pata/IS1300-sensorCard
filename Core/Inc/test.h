@@ -16,8 +16,7 @@ void getHumidity(uint16_t* value);
 void tempCal(void);
 void Get_Humidity(uint16_t* value);
 
-char *ftoi(float f);
-char *itoa(int i);
+
 
 #define INC_TEST_H_
 #endif /* INC_TEST_H_ */

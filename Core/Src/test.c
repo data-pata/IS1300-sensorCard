@@ -4,7 +4,7 @@
  *  Created on: Nov 25, 2019
  *      Author: pjotr
  */
-
+#include <math.h>
 #include <string.h>
 
 #include "cmsis_os2.h"
@@ -12,11 +12,10 @@
 #include "usart.h"
 #include "i2c.h"
 
-#include "io.h"
 #include "test.h"
 #include "display.h"
 #include "pot.h"
-
+#include "utilio.h"
 
 #define HTS221_SAD (0x5f << 1)  // slave adress [SHIFTED]
 #define CTRL_REG1 0x20 // [7] PD: set to activate,
@@ -50,11 +49,11 @@ void getHumidity(uint16_t* value)
   H0_T0_out = (((uint16_t)buffer[1])<<8) | (uint16_t)buffer[0];
 
   /*3. Read H1_T0_OUT */
-  HAL_I2C_Mem_Read(&hi2c3, HTS221_SAD, 0x80|HTS221_H1_T0_OUT_L, 1, buffer, 2, 10);
+  HAL_I2C_Mem_Read(&hi2c3, HTS221_SAD, 0x80|0x3a, 1, buffer, 2, 10);
   H1_T0_out = (((uint16_t)buffer[1])<<8) | (uint16_t)buffer[0];
 
   /*4. Read H_T_OUT */
-  HAL_I2C_Mem_Read(&hi2c3, HTS221_SAD, 0x80|HTS221_HR_OUT_L_REG, 1, buffer, 2, 10);
+  HAL_I2C_Mem_Read(&hi2c3, HTS221_SAD, 0x80|0x28, 1, buffer, 2, 10);
   H_T_out = (((uint16_t)buffer[1])<<8) | (uint16_t)buffer[0];
 
   /*5. Compute the RH [%] value by linear interpolation */
@@ -108,7 +107,7 @@ void tempCal() {
   /* 6. Compute the Temperature value by linear interpolation*/
   tmp_f = (float)(T_out - T0_out) * (float)(T1_degC - T0_degC) / (float)(T1_out - T0_out)  +  T0_degC;
 
-  char str[10];
+  char str[21];
   sprintf((char *) str, "T0_degC = %d C\n\r", T0_degC);
   printu(str);
   sprintf((char *) str, "T1_degC = %d C\n\r", T1_degC);
@@ -120,148 +119,10 @@ void tempCal() {
   sprintf((char *) str, "T_out = %d\n\r", T_out);
   printu(str);
 
-  sprintf(str, "%d\n\r", (int)trunc(tmp_f));
+  sprintf(str, "%d\n\r", (int)trunc(tmp_f)); //FIXA TRUNC!
   printu(str);
 }
 
-char * ftoi(float f) {
-  char str[25];
-
-  char *tmpSign = (f < 0) ? "-" : "";
-  float tmpVal = (f < 0) ? -f : f;
-
-  int tmpInt1 = tmpVal;                  // Get the integer (678). implicit cast?
-  float tmpFrac = tmpVal - tmpInt1;      // Get fraction (0.0123).
-  int tmpInt2 = trunc(tmpFrac * 10000);  // Turn into integer (123).
-
-  // Print as parts, note that you need 0-padding for fractional bit.
-
-  sprintf (str, "f = %s%d.%04d\n", tmpSign, tmpInt1, tmpInt2);
-  printu(str);
-  return str;
-}
-
-//
-//int16_t Hx_rh; // = (H1_rh - H0_rh)
-//int16_t H0_T0_out, H1_T0_out, H0_rh, H1_rh;
-//int16_t T0_degC, T1_degC, T0_out, T1_out;
-//
-//int32_t tmp;
-//uint8_t initFlag= 0;
-//
-//void humTempCalib(void) {
-//
-//  uint8_t wbuf[18];
-//  uint8_t rbuf[15];
-//
-//  if(!initFlag) {
-//    initFlag=1;
-//
-//  int16_t T0_degC_x8_u16, T1_degC_x8_u16;
-//  uint8_t T1_T0_msb;
-//
-//// READ HUMIDITY CALIBRATION VALUES
-//
-//    HAL_I2C_Mem_Read(&hi2c3, HTS221_SAD, CLBR_REG, 1, rbuf, 15, 50);
-//
-//    H0_rh = rbuf[0]>>1;      // calibration values must be divided by 2
-//    H1_rh = rbuf[1]>>1;
-//    H0_T0_out = (uint16_t)rbuf[0x6] | (((uint16_t)rbuf[0x7]) << 8); // concatenate to correct int16_t values
-//    H1_T0_out = (uint16_t)rbuf[0xA] | (((uint16_t)rbuf[0xB]) << 8);
-//
-////    sprintf((char *) wbuf, "rbuf[0x6] = %x rbuf[0x7] = %x \n\r", rbuf[0x6], rbuf[0x7]);
-////    printu(wbuf);
-////    sprintf((char *) wbuf, "rbuf[0xA] = %x rbuf[0xB] = %x \n\r", rbuf[0xA], rbuf[0xB]);
-////    printu(wbuf);
-//
-////    H0_T0_out = ~H0_T0_out + 1; // two's complement
-////    H1_T0_out = ~H1_T0_out + 1; // but since datatype is signed it will display corr values?
-////   0  1  2  3  4  5  6  7  8  9  A  B
-////0x30 31 32 33 34 35 36 37 38 39 3A 3B
-//
-////    sprintf((char *) wbuf, "H0_rH = %d%% rH \n\r", H0_rh);
-////    printu(wbuf);
-////    sprintf((char *) wbuf, "H1_rH = %d%% rH \n\r", H1_rh);
-////    printu(wbuf);
-////    sprintf((char *) wbuf, "H0_T0_out = %d \n\r", H0_T0_out);
-////    printu(wbuf);
-////    sprintf((char *) wbuf, "H1_T0_out = %d \n\r", H1_T0_out);
-////    printu(wbuf);
-//
-//// READ TEMP CALIBRATION VALUES
-//
-//    T1_T0_msb = rbuf[0x5];
-//    T0_degC_x8_u16 = (((uint16_t)(T1_T0_msb & 0x03)) << 8) | ((uint16_t)rbuf[0x2]);
-//    T1_degC_x8_u16 = (((uint16_t)(T1_T0_msb & 0x0C)) << 6) | ((uint16_t)rbuf[0x3]);
-//
-//    T0_degC = T0_degC_x8_u16>>3;
-//    T1_degC = T1_degC_x8_u16>>3;
-//
-////    T0_degC = rbuf[0x2] >> 3;
-////    T1_degC = rbuf[0x3] >> 3;
-////    T1_T0_msb = rbuf[0x5];
-////    T0_degC = ((T1_T0_msb & 0x3) << 8) | T0_degC; // 3
-////    T1_degC = ((T1_T0_msb & 0xC) << 6) | T1_degC;
-//
-//    T0_out = (uint16_t)rbuf[0xC] | (((uint16_t)rbuf[0xD]) << 8);
-//    T1_out = (uint16_t)rbuf[0xE] | (((uint16_t)rbuf[0xF]) <<8);
-//
-////    sprintf((char *) wbuf, "T0_degC = %d C\n\r", T0_degC);
-////    printu(wbuf);
-////    sprintf((char *) wbuf, "T1_degC = %d C\n\r", T1_degC);
-////    printu(wbuf);
-////    sprintf((char *) wbuf, "T0_out = %d\n\r",T0_out);
-////    printu(wbuf)
-////    sprintf((char *) wbuf, "T1_out = %d\n\r", T1_out);
-////    printu(wbuf);
-//  }
-//
-//  HAL_I2C_Mem_Read(&hi2c3, HTS221_SAD, DATA_REG, 1, rbuf, 4, 50);
-//
-//  int16_t H_T_out = (uint16_t)rbuf[0] | (((uint16_t)rbuf[1])<<8);
-//
-//  int32_t tmp = ((int32_t)(H_T_out - H0_T0_out)) * ((int32_t)(H1_rh - H0_rh)*10);
-//  int32_t H = (uint16_t) (tmp/(H1_T0_out - H0_T0_out) + H0_rh);
-//
-//  int16_t T_out = (uint16_t)rbuf[0] | (((uint16_t)rbuf[1])<<8);
-//
-//  tmp = ((int32_t)(T_out - T0_out)) * ((int32_t)(T1_degC - T0_degC)*10);
-//  int32_t TC = tmp /(T1_out - T0_out) + T0_degC*10;
-//
-//}
 
 
-/**
- * @brief Convert integer to string.
- * @param i The integer.
- * @return Pointer to statically allocated string.
- * @note The string is overwritten upon the next call.
- */
-char *itoa(int i)
-{
-  static char buf[16];
-  char *p = buf;
-  int n = 1000000000;
-  int onlyzero = 1;
-  if (i < 0) {
-    *p++ = '-';
-    i = -i;
-  }
-  while (n) {
-    int k = i / n;
-    i = i % n;
-    n = n / 10;
-    if (onlyzero) {
-      if (k == 0)
-        continue;
-      else
-        onlyzero = 0;
-    }
-    *p = '0' + k;
-    p++;
-  }
-  if (onlyzero)
-    *p++ = '0';
-  *p = 0;
-  return buf;
-}
+
