@@ -9,16 +9,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-int fputc(int ch, FILE *f);
-
-void getHumidity(void);
-
-void runTests(void);
-void testDisplay(void);
-void testBacklight(uint8_t[]);
-void testPot(void);
-void testIO(void);
-
+void humTempCalib(void);
+void humTemp(uint16_t* value);
+char *itoa(int i);
 
 
 #define INC_TEST_H_
