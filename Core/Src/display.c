@@ -7,6 +7,10 @@
 //#include "main.h"
 #include "display.h"
 
+#define RESET_CS HAL_GPIO_WritePin(CS_SPI2_GPIO_Port, CS_SPI2_Pin, 0)
+#define SET_CS HAL_GPIO_WritePin(CS_SPI2_GPIO_Port, CS_SPI2_Pin, 1)
+
+
 void displayInit(void){
   SET_CS;
   HAL_Delay(1);
@@ -31,31 +35,25 @@ void displayInit(void){
 
   writeIns(0x06);
   writeIns(0x38); // reset RE, reset IS
-  writeIns(0x0f); //display, cursor, blink on
-  writeIns(0x01); //clearDisplay
+  //writeIns(0x0f); //display, cursor, blink on
+  writeIns(0x08 | (0x04| 0x05|0x06)); // CURSOR_OFF  0x05, DISPLAY_ON 0x04 BLINK_OFF 0x06
 
   SET_CS;
-
-  //writeD(0xff); //ascii
-  //HAL_Delay(10);
-
 }
 
-void writeString(uint8_t * string) {
+void printd(uint8_t * str) {
   do {
-    writeD(*string++);
-  } while(*string);
+    writeD(*str++);
+  } while(*str);
 }
 
 void writeD(uint8_t byte) {
   RESET_CS;
-
   uint8_t data[3];
   data[0] = 0x5f;
   data[1] = byte & 0x0f;
   data[2] = (byte >> 4) & 0x0f;
   HAL_SPI_Transmit(&hspi2, data, 3, 10);
-
   SET_CS;
 }
 
@@ -88,4 +86,14 @@ void displayReset(void){
   HAL_GPIO_WritePin(Display_reset_GPIO_Port, Display_reset_Pin, GPIO_PIN_SET);
 }
 
+/**
+ * @brief dprintLine, prints @param string to @param line on display.
+ * @param line: 0-indexed line to print to, min 0 max 3.
+ * @param str: char pointer to str, max 10 characters.
+ */
+void printdL(int line, char* str) {
+  int addr = line * 0x20;
+  writeIns(0x80 | addr); //set address pointer
+  printd(str);
+}
 
