@@ -1,24 +1,22 @@
 /*
  * test.h
  *
- *  Created on: Nov 25, 2019
- *      Author: pjotr
+ *  Created on: 13 dec. 2019
+ *      Author: Pjotr
  */
 
 #ifndef INC_TEST_H_
+#define INC_TEST_H_
+
 #include <stdint.h>
 #include <stdio.h>
-#include "HTS221_Driver.h"
+
+void dimBackLightTest(void);
+void pwmLedTest(void);
+void potTest();
+void displayTest();
+void rtcTest();
+void ioTest();
 
 
-void humTempCalib(void);
-void getHumidity(uint16_t* value);
-void tempCal(void);
-void Get_Humidity(uint16_t* value);
-
-
-
-#define INC_TEST_H_
 #endif /* INC_TEST_H_ */
-
-
